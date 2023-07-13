@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "start": "next start",
+        "start": "next dev",
         "dev": "next dev",
         "start:next": "next dev",
         "start:json": "json-server --watch data/todos.json --port 5000",
