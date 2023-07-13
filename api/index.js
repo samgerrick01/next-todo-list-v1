@@ -1,4 +1,7 @@
-const baseUrl = 'http://localhost:5000'
+//LocalHost
+// const baseUrl = 'http://localhost:5000'
+//Live Server
+const baseUrl = 'https://next-todo-list-v1-server.onrender.com/'
 
 export const getAllTodos = async () => {
     const res = await fetch(`${baseUrl}/todos`, { cache: 'no-store' })
