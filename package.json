@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "start": "npm-run-all -p start:next start:json",
+    "start:next": "next dev",
+    "start:json": "json-server --watch data/todos.json --port 5000",
     "build": "next build",
-    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -13,9 +14,15 @@
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
     "next": "13.4.9",
+    "npm-run-all": "^4.1.5",
     "postcss": "8.4.25",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.10.1",
     "tailwindcss": "3.3.2"
+  },
+  "devDependencies": {
+    "daisyui": "^3.2.1",
+    "json-server": "^0.17.3"
   }
 }
