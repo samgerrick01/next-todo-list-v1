@@ -3,11 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "start": "next dev",
         "dev": "next dev",
-        "start:next": "next dev",
-        "start:json": "json-server --watch data/todos.json --port 5000",
         "build": "next build",
+        "start": "next start",
         "lint": "next lint"
     },
     "dependencies": {
