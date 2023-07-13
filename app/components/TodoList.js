@@ -30,7 +30,9 @@ function TodoList({ todos }) {
             })
             setEditModal(false)
             router.refresh()
-            setLoading(false)
+            setTimeout(() => {
+                setLoading(false)
+            }, 500)
         }
     }
 
@@ -40,7 +42,9 @@ function TodoList({ todos }) {
         await deleteTodo(data.id)
         setDelModal(false)
         router.refresh()
-        setLoading(false)
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
     }
 
     const handleStatus = async (todo) => {
@@ -48,11 +52,13 @@ function TodoList({ todos }) {
         setLoading(true)
         await updateStatus({
             id: todo.id,
-            text: todo.id,
+            text: todo.text,
             status: !todo.status,
         })
         router.refresh()
-        setLoading(false)
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
     }
 
     return (
@@ -63,33 +69,35 @@ function TodoList({ todos }) {
                     <tr className="text-black">
                         <th className="w-3/5">Todos</th>
                         <th className="w-1/5">Status</th>
-                        <th className="w-1/5">Actions</th>
+                        <th className="w-full flex justify-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {/* row 1 */}
                     {todos.length !== 0 &&
-                        todos.map((todo) => (
-                            <Todo
-                                key={todo.id}
-                                todo={todo}
-                                setEditModal={setEditModal}
-                                setDelModal={setDelModal}
-                                setData={setData}
-                                setEditVal={setEditVal}
-                                handleStatus={handleStatus}
-                            />
-                        ))}
+                        todos
+                            .sort((a, b) => a.status - b.status)
+                            .map((todo) => (
+                                <Todo
+                                    key={todo.id}
+                                    todo={todo}
+                                    setEditModal={setEditModal}
+                                    setDelModal={setDelModal}
+                                    setData={setData}
+                                    setEditVal={setEditVal}
+                                    handleStatus={handleStatus}
+                                />
+                            ))}
                 </tbody>
             </table>
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center mt-5 text-lg">
                 {todos.length === 0 && 'NO TODOS!'}
             </div>
             {/* Delete Modal */}
             <Modal
                 open={delModal}
                 close={() => setDelModal(false)}
-                title="Delete Todo?"
+                title="Delete Todo"
             >
                 <div className="flex flex-col">
                     <span>Are you sure you want to delete?</span>
@@ -107,11 +115,12 @@ function TodoList({ todos }) {
             <Modal
                 open={editModal}
                 close={() => setEditModal(false)}
-                title="Edit Todo"
+                title="Update Todo"
             >
                 <form onSubmit={handleEdit}>
                     <div className="modal-action justify-center">
                         <input
+                            autoComplete="off"
                             id="edit-todo"
                             style={{ color: 'black' }}
                             type="text"

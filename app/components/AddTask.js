@@ -10,9 +10,11 @@ import Loading from './Loading'
 
 function AddTask() {
     const router = useRouter()
+    //modal state
     const [modalOpen, setModalOpen] = useState(false)
+    //input state
     const [newTodoValue, setNewTodoValue] = useState('')
-
+    //loading state
     const [loading, setLoading] = useState(false)
 
     const handleSubmitNewTodo = async (e) => {
@@ -24,10 +26,12 @@ function AddTask() {
                 text: newTodoValue,
                 status: false,
             })
-            setNewTodoValue('')
             setModalOpen(false)
+            setNewTodoValue('')
             router.refresh()
-            setLoading(false)
+            setTimeout(() => {
+                setLoading(false)
+            }, 500)
         }
     }
     return (
@@ -49,6 +53,7 @@ function AddTask() {
                 <form onSubmit={handleSubmitNewTodo}>
                     <div className="modal-action justify-center">
                         <input
+                            autoComplete="off"
                             id="add-todo"
                             style={{ color: 'black' }}
                             type="text"

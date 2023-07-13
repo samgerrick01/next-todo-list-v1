@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import { FaTrash, FaEdit } from 'react-icons/fa'
 
 function Todo({
     todo,
@@ -10,33 +11,40 @@ function Todo({
     handleStatus,
 }) {
     return (
-        <tr className={todo.status ? 'bg-green-300' : 'bg-gray-300'}>
-            <td className={todo.status ? 'line-through' : ''}>{todo.text}</td>
+        <tr className={todo.status ? 'bg-green-200' : 'bg-red-200'}>
+            <td
+                className={
+                    todo.status
+                        ? 'line-through cursor-pointer'
+                        : 'cursor-pointer'
+                }
+                onClick={() => handleStatus(todo)}
+            >
+                {todo.text}
+            </td>
             <td className="cursor-pointer" onClick={() => handleStatus(todo)}>
-                {todo.status ? 'Done' : 'Not Done'}
+                {todo.status ? 'Done' : 'Todo'}
             </td>
             <td>
-                <div className="flex justify-between">
-                    <button
+                <div className="flex gap-3 justify-center">
+                    <FaEdit
                         onClick={() => {
                             setData(todo)
                             setEditVal(todo.text)
                             setEditModal(true)
                             document.getElementById('edit-todo').focus()
                         }}
-                        className="btn btn-primary"
-                    >
-                        Edit
-                    </button>
-                    <button
+                        className="text-blue-600 cursor-pointer"
+                        size={20}
+                    />
+                    <FaTrash
                         onClick={() => {
                             setData(todo)
                             setDelModal(true)
                         }}
-                        className="btn btn-error"
-                    >
-                        Del
-                    </button>
+                        className="text-red-600 cursor-pointer"
+                        size={20}
+                    />
                 </div>
             </td>
         </tr>
