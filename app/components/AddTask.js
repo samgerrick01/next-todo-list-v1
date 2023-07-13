@@ -3,25 +3,32 @@
 import { FaPlus } from 'react-icons/fa'
 import Modal from './Modal'
 import { useState } from 'react'
-import { addTodo } from '@/api'
+import { addTodo, loading } from '@/api'
 import uniqid from 'uniqid'
 import { useRouter } from 'next/navigation'
+import Loading from './Loading'
 
 function AddTask() {
     const router = useRouter()
     const [modalOpen, setModalOpen] = useState(false)
     const [newTodoValue, setNewTodoValue] = useState('')
 
+    const [loading, setLoading] = useState(false)
+
     const handleSubmitNewTodo = async (e) => {
         e.preventDefault()
-        await addTodo({
-            id: uniqid(),
-            text: newTodoValue,
-            status: false,
-        })
-        setNewTodoValue('')
-        setModalOpen(false)
-        router.refresh()
+        if (newTodoValue) {
+            setLoading(true)
+            await addTodo({
+                id: uniqid(),
+                text: newTodoValue,
+                status: false,
+            })
+            setNewTodoValue('')
+            setModalOpen(false)
+            router.refresh()
+            setLoading(false)
+        }
     }
     return (
         <div>
@@ -56,6 +63,7 @@ function AddTask() {
                     </div>
                 </form>
             </Modal>
+            <Loading value={loading} />
         </div>
     )
 }

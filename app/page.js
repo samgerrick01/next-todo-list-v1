@@ -4,7 +4,6 @@ import TodoList from './components/TodoList'
 
 export default async function Home() {
     const todos = await getAllTodos()
-    console.log('TEST', todos)
     return (
         <main className="max-w-4xl mx-auto mt-4 text-black">
             <div className="text-center my-5 flex flex-col gap-4">

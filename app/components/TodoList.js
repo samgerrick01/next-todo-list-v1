@@ -5,6 +5,7 @@ import Todo from './Todo'
 import Modal from './Modal'
 import { deleteTodo, updateStatus, updateTodo } from '@/api'
 import { useRouter } from 'next/navigation'
+import Loading from './Loading'
 
 function TodoList({ todos }) {
     const router = useRouter()
@@ -15,33 +16,43 @@ function TodoList({ todos }) {
     //Edit state
     const [editModal, setEditModal] = useState(false)
     const [editVal, setEditVal] = useState('')
+    //loading state
+    const [loading, setLoading] = useState(false)
 
     const handleEdit = async (e) => {
         e.preventDefault()
-        await updateTodo({
-            id: data.id,
-            text: editVal,
-            status: data.status,
-        })
-        setEditModal(false)
-        router.refresh()
+        if (editVal) {
+            setLoading(true)
+            await updateTodo({
+                id: data.id,
+                text: editVal,
+                status: data.status,
+            })
+            setEditModal(false)
+            router.refresh()
+            setLoading(false)
+        }
     }
 
     const handleDelete = async (e) => {
         e.preventDefault()
+        setLoading(true)
         await deleteTodo(data.id)
         setDelModal(false)
         router.refresh()
+        setLoading(false)
     }
 
     const handleStatus = async (todo) => {
         // e.preventDefault()
+        setLoading(true)
         await updateStatus({
             id: todo.id,
             text: todo.id,
             status: !todo.status,
         })
         router.refresh()
+        setLoading(false)
     }
 
     return (
@@ -115,6 +126,7 @@ function TodoList({ todos }) {
                     </div>
                 </form>
             </Modal>
+            <Loading value={loading} />
         </div>
     )
 }
