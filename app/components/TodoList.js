@@ -1,40 +1,122 @@
-import React from "react";
+'use client'
 
-function TodoList() {
-  return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th>Todos</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* row 1 */}
-          <tr>
-            <td>Cy Ganderton</td>
-            <td>Quality Control Specialist</td>
-            <td>Blue</td>
-          </tr>
-          {/* row 2 */}
-          <tr>
-            <td>Hart Hagerty</td>
-            <td>Desktop Support Technician</td>
-            <td>Purple</td>
-          </tr>
-          {/* row 3 */}
-          <tr>
-            <td>Brice Swyre</td>
-            <td>Tax Accountant</td>
-            <td>Red</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
+import { useState } from 'react'
+import Todo from './Todo'
+import Modal from './Modal'
+import { deleteTodo, updateStatus, updateTodo } from '@/api'
+import { useRouter } from 'next/navigation'
+
+function TodoList({ todos }) {
+    const router = useRouter()
+
+    //Delete state
+    const [delModal, setDelModal] = useState(false)
+    const [data, setData] = useState(null)
+    //Edit state
+    const [editModal, setEditModal] = useState(false)
+    const [editVal, setEditVal] = useState('')
+
+    const handleEdit = async (e) => {
+        e.preventDefault()
+        await updateTodo({
+            id: data.id,
+            text: editVal,
+            status: data.status,
+        })
+        setEditModal(false)
+        router.refresh()
+    }
+
+    const handleDelete = async (e) => {
+        e.preventDefault()
+        await deleteTodo(data.id)
+        setDelModal(false)
+        router.refresh()
+    }
+
+    const handleStatus = async (todo) => {
+        // e.preventDefault()
+        await updateStatus({
+            id: todo.id,
+            text: todo.id,
+            status: !todo.status,
+        })
+        router.refresh()
+    }
+
+    return (
+        <div className="overflow-x-auto">
+            <table className="table">
+                {/* head */}
+                <thead>
+                    <tr className="text-black">
+                        <th className="w-3/5">Todos</th>
+                        <th className="w-1/5">Status</th>
+                        <th className="w-1/5">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* row 1 */}
+                    {todos.length !== 0 &&
+                        todos.map((todo) => (
+                            <Todo
+                                key={todo.id}
+                                todo={todo}
+                                setEditModal={setEditModal}
+                                setDelModal={setDelModal}
+                                setData={setData}
+                                setEditVal={setEditVal}
+                                handleStatus={handleStatus}
+                            />
+                        ))}
+                </tbody>
+            </table>
+            <div className="w-full flex justify-center">
+                {todos.length === 0 && 'NO TODOS!'}
+            </div>
+            {/* Delete Modal */}
+            <Modal
+                open={delModal}
+                close={() => setDelModal(false)}
+                title="Delete Todo?"
+            >
+                <div className="flex flex-col">
+                    <span>Are you sure you want to delete?</span>
+                    <div className="flex w-full justify-end">
+                        <button
+                            className="btn btn-error"
+                            onClick={handleDelete}
+                        >
+                            Yes
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+            {/* Edit Modal */}
+            <Modal
+                open={editModal}
+                close={() => setEditModal(false)}
+                title="Edit Todo"
+            >
+                <form onSubmit={handleEdit}>
+                    <div className="modal-action justify-center">
+                        <input
+                            id="edit-todo"
+                            style={{ color: 'black' }}
+                            type="text"
+                            placeholder="Enter Todo"
+                            className="input input-ghost w-full max-w-xs bg-white"
+                            value={editVal}
+                            onChange={(e) => setEditVal(e.target.value)}
+                        />
+                        <button type="submit" className="btn btn-primary">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </Modal>
+        </div>
+    )
 }
 
-export default TodoList;
+export default TodoList
